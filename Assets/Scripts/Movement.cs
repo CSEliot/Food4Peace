@@ -1,33 +1,52 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System;
+using System.Collections.Generic;
 
 
 [RequireComponent (typeof (Rigidbody))]
-[RequireComponent (typeof (CapsuleCollider))]
 
-public class Movement : MonoBehaviour {	
+public class Movement : MonoBehaviour {
+
+
+    public Animator animLeftBird;
+    public Animator animMiddleBird;
+    public Animator animRightBird;
+    public Animator animVine;
+
+    public float turnModifier;
+
+    private enum States { FLYING, STUNNED}
+    private States currentState;
 
 	private float rotUpDown;// = 0;
+    private float target_rotUpDown;
 	public float rotUpDownSensitivity;
 	public float upDownRange;
 	//private Vector3 speed;
 	private float verticalSpeed;
 	private float rotLeftRight;
+    private float target_rotLeftRight;
 	public float rotLeftRightSensitivity;
 	public float leftRightRange;
 
+
+    private float lrTurnQuantity;
+    //private float 
 
     public float suppliesBoxSizeX;
     public float suppliesBoxSizeY;
     public GUIStyle suppliesItemsStyle;
 
-	private float upMove;
     public float maxSpeed;
 	
 	private Vector3 playerPos;
 	//private Ray	ray;
 	//private RaycastHit rayHitDown;
 	private float moveSpeed;
+
+    private float stunLength;
+    private float timeStunned;
 
     private float remainingItems;
 
@@ -60,7 +79,10 @@ public class Movement : MonoBehaviour {
 	
 	// Use this for initialization
 	void Start () {
+        stunLength = 2f;
+        timeStunned = 0f;
 		newRotationAngle = new Vector3();
+        currentState = States.FLYING;
 		startingCameraRotation = transform.GetChild(0).transform.localRotation.eulerAngles;
 		moveSpeed = flySpeedModifier;
 		rotLeftRight = 0.0f;
@@ -80,15 +102,20 @@ public class Movement : MonoBehaviour {
 	
 	
 	// Update is called once per frame
-	void FixedUpdate () {
+	void Update () {
 		
+        
+
+
 		//player rotation
 		//left and right
-		
-		rotLeftRight = Input.GetAxis(Haim_str)*rotLeftRightSensitivity;
-		rotLeftRight = Mathf.Clamp(rotLeftRight, -leftRightRange, leftRightRange);
-		rotUpDown = -Input.GetAxis(Vaim_str)*rotUpDownSensitivity;
-		rotUpDown = Mathf.Clamp(rotUpDown, -upDownRange, upDownRange);
+		//currentRotation = Mathf.Lerp(currentRotation, targetRotation, (Time.deltaTime*2));
+        target_rotLeftRight = Input.GetAxis(Haim_str) * rotLeftRightSensitivity;
+		//target_rotLeftRight = Mathf.Clamp(rotLeftRight, -leftRightRange, leftRightRange);
+        rotLeftRight = Mathf.Lerp(rotLeftRight, target_rotLeftRight, (Time.deltaTime * 20));
+        target_rotUpDown = -Input.GetAxis(Vaim_str) * rotUpDownSensitivity;
+        //target_rotUpDown = Mathf.Clamp(rotUpDown, -upDownRange, upDownRange);
+        rotUpDown = Mathf.Lerp(rotUpDown, target_rotUpDown, (Time.deltaTime*20));
 		newRotationAngle.x = rotUpDown;
 		newRotationAngle.y = rotLeftRight;
 		newRotationAngle.z = startingCameraRotation.z;
@@ -101,13 +128,32 @@ public class Movement : MonoBehaviour {
 		//velocityChange.z = Mathf.Clamp(velocityChange.z, -maxVelocityChange, maxVelocityChange);
 		velocityChange.y = 0;
 
-		
-        upMove = Input.GetAxis(Vaim_str) * moveSpeed;
         if(rigidbody.velocity.magnitude < maxSpeed){
             rigidbody.AddRelativeForce(0, 0, moveSpeed);
         }
 
-		rigidbody.AddRelativeForce (Input.GetAxis(Haim_str)*moveSpeed,upMove, 0);
+
+        //========ANIMATION CHECKING CONTROLLERS=================//
+        //only testing one anim, all end same, so one is enough.
+        if (currentState == States.FLYING)
+        {
+            rigidbody.AddRelativeForce(Input.GetAxis(Haim_str) * turnModifier, Input.GetAxis(Vaim_str) * turnModifier, 0);
+        }
+        else if(currentState == States.STUNNED)
+        {
+            if (Time.time - timeStunned > stunLength)
+            {
+                transform.position = new Vector3(transform.position.x, transform.position.y, transform.position.z - 20f);
+                currentState = States.FLYING;
+                animLeftBird.SetBool("Flying", true);
+                animMiddleBird.SetBool("Flying", true);
+                animRightBird.SetBool("Flying", true);
+                animVine.SetBool("Flying", true);
+            }
+        }
+
+		
+
 	}
 
 	void OnCollisionEnter(Collision thing){
@@ -120,28 +166,19 @@ public class Movement : MonoBehaviour {
             }
             else
             {
+                currentState = States.STUNNED;
+                animLeftBird.SetBool("Flying", false);
+                animMiddleBird.SetBool("Flying", false);
+                animRightBird.SetBool("Flying", false);
+                animVine.SetBool("Flying", false);
                 remainingItems--;
                 rigidbody.velocity.Set(0f, 0f, 0f);
-                transform.position = new Vector3(transform.position.x, transform.position.y, transform.position.z - 20f);
+                timeStunned = Time.time;
             }
         }
         else if (thing.gameObject.name == "Goal")
         {
             Application.LoadLevel(0);
         }
-
-//		Vector3 tempVect;
-//		// we want to prevent isGrounded from being true and totalJumpsMade = 0 until 2 seconds later
-//		if(isGrounded == false && canCheckForJump){
-//			for(int i = 0; i < floor.contacts.Length; i++){
-//				tempVect = floor.contacts[i].normal;
-//				if( tempVect.y > floorInclineThreshold){
-//					isGrounded = true;
-//					totalJumpsMade = 0;
-//					return;
-//					//Manager.say("Collision normal is: " + tempVect);
-//				}
-//			}
-//		}
 	}
 }
