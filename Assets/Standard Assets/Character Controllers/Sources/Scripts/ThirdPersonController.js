@@ -44,7 +44,7 @@ var speedSmoothing = 10.0;
 var rotateSpeed = 500.0;
 var trotAfterSeconds = 3.0;
 
-var canJump = true;
+var canJump = false;
 
 private var jumpRepeatTime = 0.05;
 private var jumpTimeout = 0.15;
