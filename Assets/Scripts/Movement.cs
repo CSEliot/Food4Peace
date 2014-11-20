@@ -116,7 +116,7 @@ public class Movement : MonoBehaviour {
         {
             if (remainingItems == 1)
             {
-                Application.LoadLevel(0);
+                Application.LoadLevel(Application.loadedLevel);
             }
             else
             {

@@ -10,6 +10,7 @@ public class ItemSelect : MonoBehaviour {
     public GUIStyle ItemSelect2ButtonStyle;
     public GUIStyle ItemSelect3ButtonStyle;
     public GUIStyle SelectionGUIStyle;
+    public GUIStyle buttonAreaStyle;
 
     private bool item1focus;
     private bool item2focus;
@@ -23,8 +24,15 @@ public class ItemSelect : MonoBehaviour {
 	void Update () {
         if (item1focus)
         {
-            
-            //GameObject.Find("Item1").GetComponent<Pedestal>().rotationSpeed = 50;
+            Application.LoadLevel(1);
+        }
+        if (item2focus)
+        {
+            Application.LoadLevel(2);
+        }
+        if (item3focus)
+        {
+            Application.LoadLevel(3);
         }
 	}
 
@@ -35,7 +43,7 @@ public class ItemSelect : MonoBehaviour {
                 Rect suppliesRect = new Rect(Screen.width/2, Screen.height/2*.7f, 10f, 10f);
                 GUI.Box(suppliesRect, "Select a supplies container to deliver!", SelectionGUIStyle);
                 GUILayout.BeginHorizontal();
-                    Rect item1Rect = new Rect(Screen.width / 2*.85f, Screen.height / 2 * .7f, 10f, 10f);
+                    Rect item1Rect = new Rect((Screen.width / 2)*.85f, Screen.height / 2 * .7f, 10f, 10f);
                     GUI.Box(item1Rect, "Grain", ItemSelect1Style);
                     Rect item2Rect = new Rect(Screen.width / 2, Screen.height / 2 * .7f, 10f, 10f);
                     GUI.Box(item2Rect, "Soup", ItemSelect2Style);
@@ -44,9 +52,10 @@ public class ItemSelect : MonoBehaviour {
                 GUILayout.EndHorizontal();
             GUILayout.EndVertical();
         GUILayout.EndHorizontal();
-        Rect buttonAreaRect = new Rect(Screen.width*.3f, Screen.height*.3, )
-        GUILayout.BeginArea()
-                item1focus = GUILayout.Button("Blah", ItemSelect1ButtonStyle);
+        Rect buttonAreaRect = new Rect(Screen.width * .2f, Screen.height * .4f, Screen.width * .6f, Screen.height * .3f);
+        GUILayout.BeginArea(buttonAreaRect, buttonAreaStyle);
+            GUILayout.BeginHorizontal();
+                item1focus = GUILayout.Button("", ItemSelect1ButtonStyle);
                 if (Event.current.type == EventType.Repaint && GUILayoutUtility.GetLastRect().Contains(Event.current.mousePosition))
                 {
                     GameObject.Find("Item1").GetComponent<Pedestal>().rotationSpeed = 100;
@@ -55,7 +64,7 @@ public class ItemSelect : MonoBehaviour {
                 {
                     GameObject.Find("Item1").GetComponent<Pedestal>().rotationSpeed = 10;
                 } 
-                item2focus = GUILayout.Button("Blah", ItemSelect2ButtonStyle);
+                item2focus = GUILayout.Button("", ItemSelect2ButtonStyle);
                 if (Event.current.type == EventType.Repaint && GUILayoutUtility.GetLastRect().Contains(Event.current.mousePosition))
                 {
                     GameObject.Find("Item2").GetComponent<Pedestal>().rotationSpeed = 100;
@@ -64,7 +73,7 @@ public class ItemSelect : MonoBehaviour {
                 {
                     GameObject.Find("Item2").GetComponent<Pedestal>().rotationSpeed = 10;
                 }
-                item3focus = GUILayout.Button("Blah", ItemSelect3ButtonStyle);
+                item3focus = GUILayout.Button("", ItemSelect3ButtonStyle);
                 if (Event.current.type == EventType.Repaint && GUILayoutUtility.GetLastRect().Contains(Event.current.mousePosition))
                 {
                     GameObject.Find("Item3").GetComponent<Pedestal>().rotationSpeed = 100;
@@ -73,5 +82,7 @@ public class ItemSelect : MonoBehaviour {
                 {
                     GameObject.Find("Item3").GetComponent<Pedestal>().rotationSpeed = 10;
                 }
+            GUILayout.EndHorizontal();
+        GUILayout.EndArea();
     }
 }
