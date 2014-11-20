@@ -15,14 +15,24 @@ public class Movement : MonoBehaviour {
 	private float rotLeftRight;
 	public float rotLeftRightSensitivity;
 	public float leftRightRange;
-	private float maxVelocityChange = 10.0f;
+
+
+    public float suppliesBoxSizeX;
+    public float suppliesBoxSizeY;
+    public GUIStyle suppliesItemsStyle;
 
 	private float upMove;
+    public float maxSpeed;
 	
 	private Vector3 playerPos;
 	//private Ray	ray;
 	//private RaycastHit rayHitDown;
 	private float moveSpeed;
+
+    private float remainingItems;
+
+    private bool hasWon;
+    private bool hasLost;
 	
 	//ACTION STRINGS
 	//==================================================================
@@ -55,8 +65,18 @@ public class Movement : MonoBehaviour {
 		moveSpeed = flySpeedModifier;
 		rotLeftRight = 0.0f;
 		rotUpDown = 0.0f;
+        remainingItems = 3;
+        hasLost = false;
+        hasWon = false;
 	}
-	
+
+    void OnGUI()
+    {
+        //if (GameObject.FindGameObjectWithTag("GM").GetComponent<GameMaster>().isGameOver())
+          //  windowRect = GUILayout.Window(0, windowRect, DoMyWindow, "Game Modifiers");
+        Rect remainingSuppliesBox = new Rect(Screen.width-50, 50, suppliesBoxSizeX, suppliesBoxSizeY);
+        GUI.Box(remainingSuppliesBox, "Remaining Supplies: " + remainingItems, suppliesItemsStyle);
+    }
 	
 	
 	// Update is called once per frame
@@ -81,17 +101,35 @@ public class Movement : MonoBehaviour {
 		//velocityChange.z = Mathf.Clamp(velocityChange.z, -maxVelocityChange, maxVelocityChange);
 		velocityChange.y = 0;
 
-		if (transform.position.y >= 21) {
-			upMove = 0;
-		}else{
-			upMove = Input.GetAxis(Vaim_str)*moveSpeed;
-		}
+		
+        upMove = Input.GetAxis(Vaim_str) * moveSpeed;
+        if(rigidbody.velocity.magnitude < maxSpeed){
+            rigidbody.AddRelativeForce(0, 0, moveSpeed);
+        }
 
-		rigidbody.AddRelativeForce (Input.GetAxis(Haim_str)*moveSpeed,upMove, moveSpeed);
+		rigidbody.AddRelativeForce (Input.GetAxis(Haim_str)*moveSpeed,upMove, 0);
 	}
 
 	void OnCollisionEnter(Collision thing){
-		Debug.Log ("COLLIDED WITH: " + thing.gameObject.name);
+		Debug.Log ("COLLIDED WITH: " + thing.gameObject.transform.parent.name);
+        if (thing.gameObject.transform.parent.name == "Tank")
+        {
+            if (remainingItems == 1)
+            {
+                Application.LoadLevel(0);
+            }
+            else
+            {
+                remainingItems--;
+                rigidbody.velocity.Set(0f, 0f, 0f);
+                transform.position = new Vector3(transform.position.x, transform.position.y, transform.position.z - 20f);
+            }
+        }
+        else if (thing.gameObject.name == "Goal")
+        {
+            Application.LoadLevel(0);
+        }
+
 //		Vector3 tempVect;
 //		// we want to prevent isGrounded from being true and totalJumpsMade = 0 until 2 seconds later
 //		if(isGrounded == false && canCheckForJump){
