@@ -9,6 +9,8 @@ public class LevelSelect : MonoBehaviour {
     public GUIStyle leftButton;
     public GUIStyle rightButton;
 
+    public AudioSource audio2;
+
     private float spaceWidth;
 
     private bool prettySwitch;
@@ -39,6 +41,8 @@ public class LevelSelect : MonoBehaviour {
         level03 = GameObject.Find("Level03");
 
         spaceWidth = Screen.width * .23f;
+        audio2.Play();
+        audio2.time = GameObject.Find("DataTracker").GetComponent<DataTracker>().continuePlay();
 	}
 	
 	// Update is called once per frame

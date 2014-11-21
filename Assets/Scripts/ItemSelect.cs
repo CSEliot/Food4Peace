@@ -34,18 +34,18 @@ public class ItemSelect : MonoBehaviour {
         }
         if (item1focus)
         {
-            DT.assignItemNum(2, 0);
-            Application.LoadLevel(1);
+            DT.assignItemNum(1, 0);
+            Application.LoadLevel(2);
         }
         if (item2focus)
         {
-            DT.assignItemNum(2, 1);
-            Application.LoadLevel(1);
+            DT.assignItemNum(1, 1);
+            Application.LoadLevel(2);
         }
         if (item3focus)
         {
-            DT.assignItemNum(2, 2);
-            Application.LoadLevel(1);
+            DT.assignItemNum(1, 2);
+            Application.LoadLevel(2);
         }
 	}
 
