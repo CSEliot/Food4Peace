@@ -185,7 +185,7 @@ public class Movement : MonoBehaviour {
         if (Physics.Raycast(transform.GetChild(4).position, transform.GetChild(4).transform.forward, out hit))
         {
             Debug.Log("Name hit: " + hit.distance);
-            if (hit.transform.gameObject.name == "Arm" && hit.distance < 10f)
+            if (hit.transform.gameObject.name == "Arm" && hit.distance < 9f)
             {
                 hit.transform.parent.GetChild(0).gameObject.layer = 8;
             }
@@ -269,7 +269,7 @@ public class Movement : MonoBehaviour {
             {
                 DT.setHighscore(remainingItems * points);
             }
-            Application.LoadLevel(0);
+            Application.LoadLevel(1);
         }
 	}
 }
