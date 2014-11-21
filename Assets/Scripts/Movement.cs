@@ -48,6 +48,9 @@ public class Movement : MonoBehaviour {
     private float stunLength;
     private float timeStunned;
 
+    private float immuneLength;
+    private float timeImmuned;
+
     private float remainingItems;
 
     private bool hasWon;
@@ -79,7 +82,8 @@ public class Movement : MonoBehaviour {
 	
 	// Use this for initialization
 	void Start () {
-        stunLength = 2f;
+        immuneLength = 3f;
+        stunLength = 1f;
         timeStunned = 0f;
 		newRotationAngle = new Vector3();
         currentState = States.FLYING;
@@ -141,10 +145,12 @@ public class Movement : MonoBehaviour {
         }
         else if(currentState == States.STUNNED)
         {
+            rigidbody.velocity.Set(0f, 0f, 0f);
             if (Time.time - timeStunned > stunLength)
             {
                 transform.position = new Vector3(transform.position.x, transform.position.y, transform.position.z - 20f);
                 currentState = States.FLYING;
+                timeImmuned = Time.time;
                 animLeftBird.SetBool("Flying", true);
                 animMiddleBird.SetBool("Flying", true);
                 animRightBird.SetBool("Flying", true);
@@ -157,14 +163,13 @@ public class Movement : MonoBehaviour {
 	}
 
 	void OnCollisionEnter(Collision thing){
-		Debug.Log ("COLLIDED WITH: " + thing.gameObject.transform.parent.name);
-        if (thing.gameObject.transform.parent.name == "Tank")
+        if (thing.gameObject.transform.parent!= null && thing.gameObject.transform.parent.name == "Tank")
         {
             if (remainingItems == 1)
             {
                 Application.LoadLevel(Application.loadedLevel);
             }
-            else
+            else if(Time.time - timeImmuned > immuneLength)
             {
                 currentState = States.STUNNED;
                 animLeftBird.SetBool("Flying", false);

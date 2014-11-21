@@ -15,24 +15,28 @@ public class ItemSelect : MonoBehaviour {
     private bool item1focus;
     private bool item2focus;
     private bool item3focus;
+    private DataTracker DT;
 	// Use this for initialization
 	void Start () {
-	
+        DT = GameObject.Find("DataTracker").GetComponent<DataTracker>();
 	}
 	
 	// Update is called once per frame
 	void Update () {
         if (item1focus)
         {
+            DT.assignItemNum(1, 0);
             Application.LoadLevel(1);
         }
         if (item2focus)
         {
-            Application.LoadLevel(2);
+            DT.assignItemNum(1, 1);
+            Application.LoadLevel(1);
         }
         if (item3focus)
         {
-            Application.LoadLevel(3);
+            DT.assignItemNum(1, 2);
+            Application.LoadLevel(1);
         }
 	}
 
