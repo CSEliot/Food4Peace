@@ -27,8 +27,13 @@ public class DataTracker : MonoBehaviour {
 	}
 	
 	// Update is called once per frame
-	void Update () {
-
+	void Update () {/*
+        if (Application.loadedLevel > 2 && audio.isPlaying)
+        {
+            audio.Stop();
+            transform.GetComponent<AudioListener>().enabled = false;
+            transform.GetComponent<AudioSource>().enabled = false;
+        }*/
         musicTime = audio.time;
         
 	}
