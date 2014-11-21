@@ -16,6 +16,10 @@ public class LevelSelect : MonoBehaviour {
     private bool leftPressed;
     private bool rightPressed;
 
+    public Texture leftArrow;
+    public Texture rightArrow;
+    public Texture enterButton;
+
     private int mapSwitch;
 
     private bool GOBUTTON;
@@ -34,11 +38,13 @@ public class LevelSelect : MonoBehaviour {
         level02 = GameObject.Find("Level02");
         level03 = GameObject.Find("Level03");
 
+        spaceWidth = Screen.width * .23f;
 	}
 	
 	// Update is called once per frame
 	void Update () {
-        spaceWidth = Screen.width*.3f;
+        Debug.Log("Left: " + leftPressed);
+        Debug.Log("Rt: " + rightPressed);
         if (leftPressed)
         {
             mapSwitch--;
@@ -95,6 +101,7 @@ public class LevelSelect : MonoBehaviour {
 
         if (GOBUTTON)
         {
+            Debug.Log("GOBUTTON IS GO!");
             Application.LoadLevel(mapSwitch + 2);
         }
 	
@@ -113,19 +120,20 @@ public class LevelSelect : MonoBehaviour {
         }*/
 
         Rect boxRect = new Rect(Screen.width/2f, Screen.height*.2f, 100f, 20f);
+        levelSelectStyle.normal.textColor = Color.white;
         GUI.Box(boxRect, "Select a level!", levelSelectStyle);
 
         Rect areaRect = new Rect(Screen.width * .2f, Screen.height * .4f, Screen.width, Screen.height * .3f);
         GUILayout.BeginArea(areaRect);
             GUILayout.BeginHorizontal();
-                leftPressed = GUILayout.Button("Left", leftButton);
+                leftPressed = GUILayout.Button(leftArrow, leftButton);
                 GUILayout.Space(spaceWidth);
-                rightPressed = GUILayout.Button("Right", rightButton);
+                rightPressed = GUILayout.Button(rightArrow, rightButton);
             GUILayout.EndHorizontal();
         GUILayout.EndArea();
 
-        Rect enterRect = new Rect(Screen.width/2f, Screen.height*.8f, 100f, 20f);
-        GOBUTTON = GUI.Button(enterRect, "Start!", startLevelStyle);
+        Rect enterRect = new Rect(Screen.width/2f, Screen.height*.75f, 100f, 100f);
+        GOBUTTON = GUI.Button(enterRect, enterButton);
     }
 
 
