@@ -22,6 +22,8 @@ public class DataTracker : MonoBehaviour {
         p3_item = 0;
         p4_item = 0;
         highScore = 0;
+
+        //audio.Play();
 	}
 	
 	// Update is called once per frame

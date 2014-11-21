@@ -102,7 +102,7 @@ public class LevelSelect : MonoBehaviour {
         if (GOBUTTON)
         {
             Debug.Log("GOBUTTON IS GO!");
-            Application.LoadLevel(mapSwitch + 2);
+            Application.LoadLevel(mapSwitch + 3);
         }
 	
 	}
