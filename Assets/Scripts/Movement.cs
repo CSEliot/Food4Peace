@@ -14,7 +14,7 @@ public class Movement : MonoBehaviour {
     public Animator animRightBird;
     public Animator animVine;
 
-    public float turnModifier;
+    private float turnModifier;
 
     private enum States { FLYING, STUNNED}
     private States currentState;
@@ -38,7 +38,7 @@ public class Movement : MonoBehaviour {
     public float suppliesBoxSizeY;
     public GUIStyle suppliesItemsStyle;
 
-    public float maxSpeed;
+    private float maxSpeed;
 	
 	private Vector3 playerPos;
 	//private Ray	ray;
@@ -74,6 +74,13 @@ public class Movement : MonoBehaviour {
 	Vector3 velocity;
 	Vector3 velocityChange;
 
+
+    public Material soup;
+    public Material water;
+    public Material grain;
+
+    private DataTracker DT;
+
 	void Awake () {
 		rigidbody.freezeRotation = true;
 		rigidbody.useGravity = false;
@@ -82,6 +89,7 @@ public class Movement : MonoBehaviour {
 	
 	// Use this for initialization
 	void Start () {
+
         immuneLength = 3f;
         stunLength = 1f;
         timeStunned = 0f;
@@ -94,7 +102,31 @@ public class Movement : MonoBehaviour {
         remainingItems = 3;
         hasLost = false;
         hasWon = false;
-	}
+
+
+        DT = GameObject.Find("DataTracker").GetComponent<DataTracker>();
+        if (DT.getItemNum(1) == 0)
+        {
+            gameObject.transform.GetChild(3).GetChild(1).GetComponent<SkinnedMeshRenderer>().material = grain;
+            maxSpeed = 21f;
+            turnModifier = 4f;
+            remainingItems = 3f;
+        }
+        else if (DT.getItemNum(1) == 1)
+        {
+            gameObject.transform.GetChild(3).GetChild(1).GetComponent<SkinnedMeshRenderer>().material = soup;
+            maxSpeed = 16f;
+            turnModifier = 6f;
+            remainingItems = 3f;
+        }
+        else if (DT.getItemNum(1) == 2)
+        {
+            gameObject.transform.GetChild(3).GetChild(1).GetComponent<SkinnedMeshRenderer>().material = water;
+            maxSpeed = 16f;
+            turnModifier = 4f;
+            remainingItems = 4f;
+        }
+    }
 
     void OnGUI()
     {
@@ -102,15 +134,27 @@ public class Movement : MonoBehaviour {
           //  windowRect = GUILayout.Window(0, windowRect, DoMyWindow, "Game Modifiers");
         Rect remainingSuppliesBox = new Rect(Screen.width-50, 50, suppliesBoxSizeX, suppliesBoxSizeY);
         GUI.Box(remainingSuppliesBox, "Remaining Supplies: " + remainingItems, suppliesItemsStyle);
+        if (remainingItems == 4)
+        {
+            suppliesItemsStyle.normal.textColor = Color.cyan;
+        }
+        else if (remainingItems == 3)
+        {
+            suppliesItemsStyle.normal.textColor = Color.green;
+        }
+        else if (remainingItems == 2)
+        {
+            suppliesItemsStyle.normal.textColor = Color.yellow;
+        }
+        else
+        {
+            suppliesItemsStyle.normal.textColor = Color.red;
+        }
     }
 	
 	
 	// Update is called once per frame
 	void Update () {
-		
-        
-
-
 		//player rotation
 		//left and right
 		//currentRotation = Mathf.Lerp(currentRotation, targetRotation, (Time.deltaTime*2));
@@ -171,6 +215,8 @@ public class Movement : MonoBehaviour {
             }
             else if(Time.time - timeImmuned > immuneLength)
             {
+                timeImmuned = Time.time;
+                timeStunned = Time.time;
                 currentState = States.STUNNED;
                 animLeftBird.SetBool("Flying", false);
                 animMiddleBird.SetBool("Flying", false);
@@ -178,7 +224,7 @@ public class Movement : MonoBehaviour {
                 animVine.SetBool("Flying", false);
                 remainingItems--;
                 rigidbody.velocity.Set(0f, 0f, 0f);
-                timeStunned = Time.time;
+                
             }
         }
         else if (thing.gameObject.name == "Goal")
