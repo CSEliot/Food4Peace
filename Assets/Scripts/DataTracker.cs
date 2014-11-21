@@ -7,14 +7,14 @@ public class DataTracker : MonoBehaviour {
     {
         DontDestroyOnLoad(this);
     }
-
+    public AudioSource audio;
     private int p1_item;
     private int p2_item;
     private int p3_item;
     private int p4_item;
     
     private int highScore;
-
+    private float musicTime;
 	// Use this for initialization
 	void Start () {
         p1_item = 0;
@@ -23,13 +23,19 @@ public class DataTracker : MonoBehaviour {
         p4_item = 0;
         highScore = 0;
 
-        //audio.Play();
+        audio.Play();
 	}
 	
 	// Update is called once per frame
 	void Update () {
-	
+
+        musicTime = audio.time;
+        
 	}
+
+    public float continuePlay() {
+        return musicTime;
+    }
 
     public void setHighscore(int score)
     {
