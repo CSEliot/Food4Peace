@@ -48,11 +48,11 @@ public class ItemSelect : MonoBehaviour {
                 GUI.Box(suppliesRect, "Select a supplies container to deliver!", SelectionGUIStyle);
                 GUILayout.BeginHorizontal();
                     Rect item1Rect = new Rect((Screen.width / 2)*.85f, Screen.height / 2 * .7f, 10f, 10f);
-                    GUI.Box(item1Rect, "Grain", ItemSelect1Style);
+                    GUI.Box(item1Rect, "Faster Speed!", ItemSelect1Style);
                     Rect item2Rect = new Rect(Screen.width / 2, Screen.height / 2 * .7f, 10f, 10f);
-                    GUI.Box(item2Rect, "Soup", ItemSelect2Style);
+                    GUI.Box(item2Rect, "Better Turn!", ItemSelect2Style);
                     Rect item3Rect = new Rect(Screen.width / 2*1.15f, Screen.height / 2 * .7f, 10f, 10f);
-                    GUI.Box(item3Rect, "Water", ItemSelect3Style);
+                    GUI.Box(item3Rect, "More Resources!", ItemSelect3Style);
                 GUILayout.EndHorizontal();
             GUILayout.EndVertical();
         GUILayout.EndHorizontal();
