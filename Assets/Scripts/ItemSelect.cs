@@ -12,6 +12,11 @@ public class ItemSelect : MonoBehaviour {
     public GUIStyle SelectionGUIStyle;
     public GUIStyle buttonAreaStyle;
 
+
+    public float highscoreBoxX;
+    public float highscoreBoxY;
+    public GUIStyle highscoreStyle;
+
     private bool item1focus;
     private bool item2focus;
     private bool item3focus;
@@ -23,6 +28,10 @@ public class ItemSelect : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+        if (DT == null)
+        {
+            DT = GameObject.Find("DataTracker").GetComponent<DataTracker>();
+        }
         if (item1focus)
         {
             DT.assignItemNum(1, 0);
@@ -42,6 +51,14 @@ public class ItemSelect : MonoBehaviour {
 
     void OnGUI()
     {
+        if (DT == null)
+        {
+            DT = GameObject.Find("DataTracker").GetComponent<DataTracker>();
+        }
+
+        Rect highScore = new Rect(Screen.width - 50f, 50f, highscoreBoxX, highscoreBoxY);
+        GUI.Box(highScore, "Highscore: " + DT.getHighScore(), highscoreStyle);
+
         GUILayout.BeginHorizontal(GUILayout.Width(Screen.width));
             GUILayout.BeginVertical();
                 Rect suppliesRect = new Rect(Screen.width/2, Screen.height/2*.7f, 10f, 10f);

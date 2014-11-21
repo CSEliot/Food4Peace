@@ -38,6 +38,10 @@ public class Movement : MonoBehaviour {
     public float suppliesBoxSizeY;
     public GUIStyle suppliesItemsStyle;
 
+    public float pointsBoxSizeX;
+    public float pointsBoxSizeY;
+    public GUIStyle pointsBoxStyle;
+
     private float maxSpeed;
 	
 	private Vector3 playerPos;
@@ -51,7 +55,7 @@ public class Movement : MonoBehaviour {
     private float immuneLength;
     private float timeImmuned;
 
-    private float remainingItems;
+    private int remainingItems;
 
     private bool hasWon;
     private bool hasLost;
@@ -81,6 +85,7 @@ public class Movement : MonoBehaviour {
 
     private DataTracker DT;
 
+    private int points;
 	void Awake () {
 		rigidbody.freezeRotation = true;
 		rigidbody.useGravity = false;
@@ -89,7 +94,7 @@ public class Movement : MonoBehaviour {
 	
 	// Use this for initialization
 	void Start () {
-
+        points = 10000;
         immuneLength = 3f;
         stunLength = 1f;
         timeStunned = 0f;
@@ -103,28 +108,38 @@ public class Movement : MonoBehaviour {
         hasLost = false;
         hasWon = false;
 
-
-        DT = GameObject.Find("DataTracker").GetComponent<DataTracker>();
-        if (DT.getItemNum(1) == 0)
+        try
+        {
+            DT = GameObject.Find("DataTracker").GetComponent<DataTracker>();
+            DontDestroyOnLoad(DT);
+        }catch(Exception e){
+        }
+        if (DT != null && DT.getItemNum(1) == 0)
         {
             gameObject.transform.GetChild(3).GetChild(1).GetComponent<SkinnedMeshRenderer>().material = grain;
-            maxSpeed = 21f;
-            turnModifier = 4f;
-            remainingItems = 3f;
+            maxSpeed = 28f;
+            turnModifier = 6f;
+            remainingItems = 3;
         }
-        else if (DT.getItemNum(1) == 1)
+        else if (DT != null && DT.getItemNum(1) == 1)
         {
             gameObject.transform.GetChild(3).GetChild(1).GetComponent<SkinnedMeshRenderer>().material = soup;
-            maxSpeed = 16f;
-            turnModifier = 6f;
-            remainingItems = 3f;
+            maxSpeed = 21f;
+            turnModifier = 10f;
+            remainingItems = 3;
         }
-        else if (DT.getItemNum(1) == 2)
+        else if (DT != null && DT.getItemNum(1) == 2)
         {
             gameObject.transform.GetChild(3).GetChild(1).GetComponent<SkinnedMeshRenderer>().material = water;
-            maxSpeed = 16f;
-            turnModifier = 4f;
-            remainingItems = 4f;
+            maxSpeed = 21f;
+            turnModifier = 6f;
+            remainingItems = 4;
+        }
+        else
+        {
+            maxSpeed = 21f;
+            turnModifier = 6f;
+            remainingItems = 4;
         }
     }
 
@@ -132,29 +147,50 @@ public class Movement : MonoBehaviour {
     {
         //if (GameObject.FindGameObjectWithTag("GM").GetComponent<GameMaster>().isGameOver())
           //  windowRect = GUILayout.Window(0, windowRect, DoMyWindow, "Game Modifiers");
-        Rect remainingSuppliesBox = new Rect(Screen.width-50, 50, suppliesBoxSizeX, suppliesBoxSizeY);
+        Rect remainingSuppliesBox = new Rect(Screen.width-50, 50f, suppliesBoxSizeX, suppliesBoxSizeY);
         GUI.Box(remainingSuppliesBox, "Remaining Supplies: " + remainingItems, suppliesItemsStyle);
+
+        Rect pointsRemaining = new Rect(Screen.width - 50f, 50f, pointsBoxSizeX, pointsBoxSizeY);
+        GUI.Box(pointsRemaining, "Points: " + points, pointsBoxStyle);
+        
         if (remainingItems == 4)
         {
             suppliesItemsStyle.normal.textColor = Color.cyan;
+            pointsBoxStyle.normal.textColor = Color.cyan;
         }
         else if (remainingItems == 3)
         {
             suppliesItemsStyle.normal.textColor = Color.green;
+            pointsBoxStyle.normal.textColor = Color.green;
         }
         else if (remainingItems == 2)
         {
             suppliesItemsStyle.normal.textColor = Color.yellow;
+            pointsBoxStyle.normal.textColor = Color.yellow;
         }
         else
         {
             suppliesItemsStyle.normal.textColor = Color.red;
+            pointsBoxStyle.normal.textColor = Color.red;
         }
     }
 	
 	
 	// Update is called once per frame
 	void Update () {
+
+        points--;
+
+        RaycastHit hit;
+        if (Physics.Raycast(transform.GetChild(4).position, transform.GetChild(4).transform.forward, out hit))
+        {
+            Debug.Log("Name hit: " + hit.distance);
+            if (hit.transform.gameObject.name == "Arm" && hit.distance < 10f)
+            {
+                hit.transform.parent.GetChild(0).gameObject.layer = 8;
+            }
+        }
+
 		//player rotation
 		//left and right
 		//currentRotation = Mathf.Lerp(currentRotation, targetRotation, (Time.deltaTime*2));
@@ -229,6 +265,10 @@ public class Movement : MonoBehaviour {
         }
         else if (thing.gameObject.name == "Goal")
         {
+            if (DT != null)
+            {
+                DT.setHighscore(remainingItems * points);
+            }
             Application.LoadLevel(0);
         }
 	}

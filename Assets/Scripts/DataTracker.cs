@@ -13,19 +13,31 @@ public class DataTracker : MonoBehaviour {
     private int p3_item;
     private int p4_item;
     
+    private int highScore;
 
 	// Use this for initialization
 	void Start () {
         p1_item = 0;
         p2_item = 0;
         p3_item = 0;
-        p4_item = 0;	
+        p4_item = 0;
+        highScore = 0;
 	}
 	
 	// Update is called once per frame
 	void Update () {
 	
 	}
+
+    public void setHighscore(int score)
+    {
+        highScore = score;
+    }
+
+    public int getHighScore()
+    {
+        return highScore;
+    }
 
     public void assignItemNum(int player, int item)
     {
