@@ -260,6 +260,14 @@ public class Movement : MonoBehaviour {
                 animVine.SetBool("Flying", false);
                 remainingItems--;
                 rigidbody.velocity.Set(0f, 0f, 0f);
+                GameObject[] allTanks;
+                allTanks = GameObject.FindGameObjectsWithTag("tank");
+                foreach (GameObject tank in allTanks)
+                {
+                    //reset all tank layers to 0
+                    tank.transform.GetChild(0).gameObject.layer = 0;
+                }
+
                 
             }
         }
@@ -267,7 +275,10 @@ public class Movement : MonoBehaviour {
         {
             if (DT != null)
             {
-                DT.setHighscore(remainingItems * points);
+                if (DT.getHighScore() <= (remainingItems * points))
+                {
+                   DT.setHighscore(remainingItems * points);
+                }
             }
             Application.LoadLevel(1);
         }

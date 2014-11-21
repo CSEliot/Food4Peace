@@ -41,8 +41,6 @@ public class LevelSelect : MonoBehaviour {
         level03 = GameObject.Find("Level03");
 
         spaceWidth = Screen.width * .23f;
-        audio2.Play();
-        audio2.time = GameObject.Find("DataTracker").GetComponent<DataTracker>().continuePlay();
 	}
 	
 	// Update is called once per frame
@@ -127,7 +125,7 @@ public class LevelSelect : MonoBehaviour {
         levelSelectStyle.normal.textColor = Color.white;
         GUI.Box(boxRect, "Select a level!", levelSelectStyle);
 
-        Rect areaRect = new Rect(Screen.width * .2f, Screen.height * .4f, Screen.width, Screen.height * .3f);
+        Rect areaRect = new Rect(Screen.width * .03f, Screen.height * .4f, Screen.width, Screen.height * .3f);
         GUILayout.BeginArea(areaRect);
             GUILayout.BeginHorizontal();
                 leftPressed = GUILayout.Button(leftArrow, leftButton);
