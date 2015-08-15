@@ -87,8 +87,8 @@ public class Movement : MonoBehaviour {
 
     private int points;
 	void Awake () {
-		rigidbody.freezeRotation = true;
-		rigidbody.useGravity = false;
+		GetComponent<Rigidbody>().freezeRotation = true;
+		GetComponent<Rigidbody>().useGravity = false;
 	}
 	
 	
@@ -212,8 +212,8 @@ public class Movement : MonoBehaviour {
 		//velocityChange.z = Mathf.Clamp(velocityChange.z, -maxVelocityChange, maxVelocityChange);
 		velocityChange.y = 0;
 
-        if(rigidbody.velocity.magnitude < maxSpeed){
-            rigidbody.AddRelativeForce(0, 0, moveSpeed);
+        if(GetComponent<Rigidbody>().velocity.magnitude < maxSpeed){
+            GetComponent<Rigidbody>().AddRelativeForce(0, 0, moveSpeed);
         }
 
 
@@ -221,11 +221,11 @@ public class Movement : MonoBehaviour {
         //only testing one anim, all end same, so one is enough.
         if (currentState == States.FLYING)
         {
-            rigidbody.AddRelativeForce(Input.GetAxis(Haim_str) * turnModifier, Input.GetAxis(Vaim_str) * turnModifier, 0);
+            GetComponent<Rigidbody>().AddRelativeForce(Input.GetAxis(Haim_str) * turnModifier, Input.GetAxis(Vaim_str) * turnModifier, 0);
         }
         else if(currentState == States.STUNNED)
         {
-            rigidbody.velocity.Set(0f, 0f, 0f);
+            GetComponent<Rigidbody>().velocity.Set(0f, 0f, 0f);
             if (Time.time - timeStunned > stunLength)
             {
                 transform.position = new Vector3(transform.position.x, transform.position.y, transform.position.z - 20f);
@@ -259,7 +259,7 @@ public class Movement : MonoBehaviour {
                 animRightBird.SetBool("Flying", false);
                 animVine.SetBool("Flying", false);
                 remainingItems--;
-                rigidbody.velocity.Set(0f, 0f, 0f);
+                GetComponent<Rigidbody>().velocity.Set(0f, 0f, 0f);
                 GameObject[] allTanks;
                 allTanks = GameObject.FindGameObjectsWithTag("tank");
                 foreach (GameObject tank in allTanks)
