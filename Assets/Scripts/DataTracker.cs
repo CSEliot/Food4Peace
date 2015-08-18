@@ -8,6 +8,7 @@ public class DataTracker : MonoBehaviour {
         DontDestroyOnLoad(this);
     }
     public AudioSource audio;
+    public AudioSource audio2;
     private int p1_item;
     private int p2_item;
     private int p3_item;
@@ -22,20 +23,22 @@ public class DataTracker : MonoBehaviour {
         p3_item = 0;
         p4_item = 0;
         highScore = 0;
-
-        audio.Play();
 	}
 	
 	// Update is called once per frame
-	void Update () {/*
+	void Update () {
         if (Application.loadedLevel > 2 && audio.isPlaying)
         {
+            Debug.Log("Loading Music 2");
             audio.Stop();
-            transform.GetComponent<AudioListener>().enabled = false;
-            transform.GetComponent<AudioSource>().enabled = false;
-        }*/
+            audio2.Play();
+        }
+        else if (Application.loadedLevel <= 2 && !audio.isPlaying)
+        {
+            audio2.Stop();
+            audio.Play();
+        }
         musicTime = audio.time;
-        
 	}
 
     public float continuePlay() {

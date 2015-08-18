@@ -30,6 +30,7 @@ public class LevelSelect : MonoBehaviour {
     private GameObject level02;
     private GameObject level03;
 
+    public float spaceMod;
 	// Use this for initialization
 	void Start () {
         GOBUTTON = false;
@@ -40,11 +41,14 @@ public class LevelSelect : MonoBehaviour {
         level02 = GameObject.Find("Level02");
         level03 = GameObject.Find("Level03");
 
-        spaceWidth = Screen.width * .23f;
+        spaceWidth = Screen.width * spaceMod;
 	}
 	
 	// Update is called once per frame
 	void Update () {
+
+        spaceWidth = Screen.width * spaceMod;
+
         Debug.Log("Left: " + leftPressed);
         Debug.Log("Rt: " + rightPressed);
         if (leftPressed)
@@ -105,6 +109,7 @@ public class LevelSelect : MonoBehaviour {
         {
             Debug.Log("GOBUTTON IS GO!");
             Application.LoadLevel(mapSwitch + 3);
+
         }
 	
 	}
@@ -134,7 +139,7 @@ public class LevelSelect : MonoBehaviour {
             GUILayout.EndHorizontal();
         GUILayout.EndArea();
 
-        Rect enterRect = new Rect(Screen.width/2f, Screen.height*.75f, 100f, 100f);
+        Rect enterRect = new Rect(Screen.width/2f-50f, Screen.height*.75f, 100f, 100f);
         GOBUTTON = GUI.Button(enterRect, enterButton);
     }
 
