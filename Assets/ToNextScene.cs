@@ -10,7 +10,11 @@ public class ToNextScene : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-	    if(Time.time > 10f){
+	    if(Time.time > 10f && Application.loadedLevel == 0){
+            Application.LoadLevel(1);
+        }
+        else if (Input.GetKeyDown("n"))
+        {
             Application.LoadLevel(1);
         }
 	}
